@@ -29,6 +29,7 @@ jobs:
           https://api.github.com/repos/${{ github.repository }}/environments/${{ inputs.environment_name }}
 
       - name: Get public repository public key
+        id: public_key
         run: |
           curl -L \
             -H "Accept: application/vnd.github+json" \
@@ -36,16 +37,19 @@ jobs:
             -H "X-GitHub-Api-Version: 2022-11-28" \
             -o key_descriptor.txt \
             https://api.github.com/repos/${{ github.repository }}/environments/${{ inputs.environment_name }}/secrets/public-key
+          echo "my_variable=HelloWorld" >> $GITHUB_ENV
           TMP_PUBLIC_KEY_ID=`cat key_descriptor.txt | jq -r .key_id`
           TMP_PUBLIC_KEY=`cat key_descriptor.txt | jq -r .key`
           cat key_descriptor.txt
           echo "key_id: $TMP_PUBLIC_KEY_ID"
           echo "key: $TMP_PUBLIC_KEY"
+          echo "TMP_PUBLIC_KEY_ID=$TMP_PUBLIC_KEY_ID" >> $GITHUB_ENV
+          echo "TMP_PUBLIC_KEY=$TMP_PUBLIC_KEY" >> $GITHUB_ENV
           
       - name: Encode test string
         run: |
-          echo "Public key is:$TMP_PUBLIC_KEY"
-          TMP_SECRET=`python ./scripts/encryptSecretWithKey.py $TMP_PUBLIC_KEY "SOME_VALUE_TO_STORE"`
+          echo "Public key is:${{ steps.public_key.outputs.TMP_PUBLIC_KEY }}"
+          TMP_SECRET=`python ./scripts/encryptSecretWithKey.py ${{ steps.public_key.outputs.TMP_PUBLIC_KEY }} "SOME_VALUE_TO_STORE"`
           echo "encrypted secret:$TMP_SECRET"
           curl -L \
             -X PUT \
@@ -53,4 +57,4 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.UBER_TOKEN }}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             https://api.github.com/repos/${{ github.repository }}/environments/${{ inputs.environment_name }}/secrets/REAL_SECRET \
-            -d '{"encrypted_value":"$TMP_SECRET","key_id":"$TMP_PUBLIC_KEY_ID"}'
+            -d '{"encrypted_value":"$TMP_SECRET","key_id":"${{ steps.public_key.outputs.TMP_PUBLIC_KEY_ID }}"}'
