@@ -1,0 +1,32 @@
+name: Add Environment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment_name:
+        description: 'Name of the environment to add'
+        required: true
+        type: string
+
+jobs:
+  add_environment:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up GitHub CLI
+        run: |
+          curl -fsSL https://cli.github.com/packages/githubcli-archive.key | sudo tee /etc/apt/trusted.gpg.d/githubcli.asc
+          sudo apt update
+          sudo apt install gh
+
+      - name: Authenticate with GitHub CLI
+        run: gh auth login --with-token < ${GITHUB_TOKEN}
+
+      - name: Add environment to repository
+        run: |
+          gh repo edit ${GITHUB_REPOSITORY} --add-environment ${GITHUB_EVENT_INPUTS_environment_name}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
