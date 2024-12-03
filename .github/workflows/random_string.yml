@@ -19,4 +19,4 @@ jobs:
       - name: Generate random string
         run: |
           echo ${{ inputs.length }}
-          # /dev/urandom tr -dc 'A-Za-z0-9!@#$%^&*' | head -c ${{ inputs.length }}
+          /dev/urandom tr -dc 'A-Za-z0-9!@#$%^&*' | head -c ${{ inputs.length }}
