@@ -19,9 +19,6 @@ jobs:
       - name: Check GH version
         run: gh --version
 
-      # - name: Authenticate with GitHub CLI
-      #   run: gh auth login --with-token  ${{ github.token }}
-
       - name: Add environment to repository
         run: |
-          gh repo edit ${{ github.repository }} --add-environment ${{ inputs.environment_name }}
+          gh api --method PUT -H "Accept: application/vnd.github+json" repos/${{ github.repository }}/environments/${{ inputs.environment_name }}
