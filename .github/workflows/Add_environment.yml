@@ -24,3 +24,4 @@ jobs:
           gh api --method PUT -H "Accept: application/vnd.github+json" repos/${{ github.repository }}/environments/${{ inputs.environment_name }}
         env:
           GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
