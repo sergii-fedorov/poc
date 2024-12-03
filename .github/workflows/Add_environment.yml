@@ -16,11 +16,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up GitHub CLI
-        run: |
-          curl -fsSL https://cli.github.com/packages/githubcli-archive.key | sudo tee /etc/apt/trusted.gpg.d/githubcli.asc
-          sudo apt update
-          sudo apt install gh
+      - name: Check GH version
+        run: gh --version
 
       - name: Authenticate with GitHub CLI
         run: gh auth login --with-token < ${GITHUB_TOKEN}
