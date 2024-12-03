@@ -34,7 +34,7 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer ${{ secrets.UBER_TOKEN }}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            -o key_descriptor.txt
+            -o key_descriptor.txt \
             https://api.github.com/repos/${{ github.repository }}/environments/${{ inputs.environment_name }}/secrets/public-key
           TMP_PUBLIC_KEY_ID=`cat key_descriptor.txt | jq -r .key_id'
           TMP_PUBLIC_KEY=`cat key_descriptor.txt | jq -r .key'
