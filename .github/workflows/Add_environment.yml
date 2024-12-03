@@ -44,7 +44,9 @@ jobs:
           
       - name: Encode test string
         run: |
+          echo "Public key is:$TMP_PUBLIC_KEY"
           TMP_SECRET=`python ./scripts/encryptSecretWithKey.py $TMP_PUBLIC_KEY "SOME_VALUE_TO_STORE"`
+          echo "encrypted secret:$TMP_SECRET"
           curl -L \
             -X PUT \
             -H "Accept: application/vnd.github+json" \
