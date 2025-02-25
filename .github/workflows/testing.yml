@@ -12,13 +12,23 @@ on:
         required: true
         
 jobs:
+  setup-environment:
+    runs-on: ubuntu-latest
+  
+    steps:
+      - name: 'Evaluate environment'
+        run: |
+          ENV_VALUE: ${{github.event_name == 'push' && 'abc' || inputs.environment }}
+          echo "ENV_VALUE=$ENV_VALUE" >> "$GITHUB_ENV"
+          
   deploy:
     runs-on: ubuntu-latest
-    environment: ${{ github.event_name == 'push' && 'testing' || inputs.environment }}
+    environment: ${{ env.ENV_VALUE}}
 
     steps:
       - name: 'Display state'
         run: |
+          echo "ENV_VALUE=$ENV_VALUE"
           echo "Event name is: ${{ github.event_name }}"
           echo "Job environment is: ${{ toJSON(job) }}"
           echo "Github: ${{ toJSON(github) }}"
