@@ -15,7 +15,7 @@ jobs:
   working-environment:
     runs-on: ubuntu-latest
     outputs:
-      name: ${{ steps.environment-name.outputs.name}
+      name: ${{ steps.environment-name.outputs.name }}
       
     steps:
       - id: environment-name
