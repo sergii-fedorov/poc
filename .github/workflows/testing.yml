@@ -19,7 +19,7 @@ jobs:
       - name: 'Evaluate environment'
         run: |
           export ENV_VALUE=${{github.event_name == 'push' && 'abc' || inputs.environment }}
-          echo "ENV_VALUE=$ENV_VALUE" >> "$GITHUB_ENV"
+          echo "ENV_VALUE=$ENV_VALUE" >> $GITHUB_ENV
           echo "github env: ${{ env.ENV_VALUE }}"
           
   # deploy:
