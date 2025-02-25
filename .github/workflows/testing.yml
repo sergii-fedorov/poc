@@ -1,0 +1,23 @@
+name: Testing
+
+on:
+  push:
+    tags:
+      - 'testing'
+
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
+        required: true
+        
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event_name == 'push' && 'testing' || inputs.environment }}
+
+    steps:
+      - name: 'Display state'
+        run: |
+          echo "Event name is: ${{ github.event_name }}"
+          echo "Environment is: ${{ job.environment }}"
