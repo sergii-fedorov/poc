@@ -20,4 +20,7 @@ jobs:
       - name: 'Display state'
         run: |
           echo "Event name is: ${{ github.event_name }}"
-          echo "Environment is: ${{ job.environment }}"
+          echo "Job environment is: ${{ job.environment }}"
+          echo "Jobs environment is: ${{ jobs.environment }}"
+          echo "Job is: ${{ job }}"
+          echo "Jobs is: ${{ jobs }}"
