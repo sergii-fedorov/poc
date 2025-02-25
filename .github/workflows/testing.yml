@@ -32,6 +32,7 @@ jobs:
       - id: environment-name
         name: 'Evaluate environment'
         run: |
+          echo "flag: ${{ vars.FLAG_VAR }}"
           echo "Evaluated: ${{ toJSON(github) }}"
           
   # deploy:
