@@ -10,30 +10,42 @@ on:
       environment:
         type: environment
         required: true
-        
+
 jobs:
-  working-environment:
-    runs-on: ubuntu-latest
-    outputs:
-      name: ${{ steps.environment-name.outputs.name }}
-      
-    steps:
-      - id: environment-name
-        name: 'Evaluate environment'
-        run: |
-          echo "name=${{github.event_name == 'push' && 'abc' || inputs.environment }}" >> "$GITHUB_OUTPUT"
-          
   use-environment:
     runs-on: ubuntu-latest
-    needs: working-environment
-    environment: ${{ needs.working-environment.outputs.name }}
+    environment: ${{github.event_name == 'push' && 'abc' || inputs.environment }}
       
     steps:
-      - id: environment-name
-        name: 'Evaluate environment'
+      - name: 'Evaluate environment'
         run: |
           echo "flag: ${{ vars.FLAG_VAR }}"
           echo "Evaluated: ${{ toJSON(github) }}"
+          
+        
+# jobs:
+#   working-environment:
+#     runs-on: ubuntu-latest
+#     outputs:
+#       name: ${{ steps.environment-name.outputs.name }}
+      
+#     steps:
+#       - id: environment-name
+#         name: 'Evaluate environment'
+#         run: |
+#           echo "name=${{github.event_name == 'push' && 'abc' || inputs.environment }}" >> "$GITHUB_OUTPUT"
+          
+#   use-environment:
+#     runs-on: ubuntu-latest
+#     needs: working-environment
+#     environment: ${{ needs.working-environment.outputs.name }}
+      
+#     steps:
+#       - id: environment-name
+#         name: 'Evaluate environment'
+#         run: |
+#           echo "flag: ${{ vars.FLAG_VAR }}"
+#           echo "Evaluated: ${{ toJSON(github) }}"
           
   # deploy:
   #   runs-on: ubuntu-latest
