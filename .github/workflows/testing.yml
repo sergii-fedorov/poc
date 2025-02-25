@@ -14,17 +14,25 @@ on:
 jobs:
   setup-environment:
     runs-on: ubuntu-latest
-    env: 
-      foo : bar
-  
+    outputs:
+      working-environment: ${{ steps.environment-name.outputs.name}
+      
     steps:
-      - name: 'Evaluate environment'
+      - id: environment-name
+        name: 'Evaluate environment'
         run: |
-          export ENV_VALUE=${{github.event_name == 'push' && 'abc' || inputs.environment }}
-          echo "ENV_VALUE=$ENV_VALUE" >> $GITHUB_ENV
-          echo "github env: ${{ env.ENV_VALUE }}"
-          echo "GITHUB_ENV:$GITHUB_ENV"
-          echo "env: ${{ toJSON(env) }}"
+          echo "name=${{github.event_name == 'push' && 'abc' || inputs.environment }}" >> "$GITHUB_OUTPUT"
+          
+  use-environment:
+    runs-on: ubuntu-latest
+    needs: setup-environment
+    environment: ${{ needs.setup-environment.outputs.name }}
+      
+    steps:
+      - id: environment-name
+        name: 'Evaluate environment'
+        run: |
+          echo "Evaluated: ${{ toJSON(github) }}"
           
   # deploy:
   #   runs-on: ubuntu-latest
